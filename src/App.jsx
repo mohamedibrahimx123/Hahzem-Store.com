@@ -16,6 +16,10 @@ function App() {
   const location = useLocation()
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
+
+  useEffect(() => {
     const isMobile = window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window
     if (isMobile) return
 
