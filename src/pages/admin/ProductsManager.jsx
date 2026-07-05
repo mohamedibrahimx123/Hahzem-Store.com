@@ -26,7 +26,7 @@ const emptyProduct = {
   brand: 'apple',
   category: 'phone',
   images: [''],
-  specs: { ram: '', storage: '', display: '', battery: '', processor: '', camera: '', os: '', network: '5G' },
+  specs: { ram: '', storage: '', display: '', battery: '', processor: '', camera: '', os: '', network: 'لا يوجد' },
   variants: [],
   available: true,
   rating: 0,
@@ -85,6 +85,8 @@ export default function ProductsManager() {
       setStock(`${productId}-${v.id}`, v.stock)
     })
     saveWithPersist(updated)
+    setEditingId(null)
+    setForm({ ...emptyProduct, id: Date.now() })
     setShowForm(false)
   }
 
@@ -263,6 +265,7 @@ export default function ProductsManager() {
                   onChange={(e) => setForm({ ...form, specs: { ...form.specs, network: e.target.value } })}
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-primary/50 text-sm"
                 >
+                  <option value="لا يوجد" className="bg-dark">لا يوجد</option>
                   <option value="5G" className="bg-dark">5G</option>
                   <option value="4G" className="bg-dark">4G</option>
                 </select>
@@ -412,11 +415,20 @@ export default function ProductsManager() {
                             <button
                               key={c}
                               type="button"
-                              onClick={() => updateVariant(i, 'color', c)}
-                              className={`w-5 h-5 rounded-full transition-transform hover:scale-110 ${v.color === c ? 'ring-1 ring-white ring-offset-2 ring-offset-dark' : ''}`}
-                              style={{ backgroundColor: c }}
-                              title={getColorName(c)}
-                            />
+                              onClick={() => {
+                                updateVariant(i, 'color', c)
+                                updateVariant(i, 'colorName', getColorName(c))
+                              }}
+                              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] transition-all ${
+                                v.color === c
+                                  ? 'ring-1 ring-white/30 bg-white/10 text-white'
+                                  : 'text-muted hover:text-white'
+                              }`}
+                              style={{ backgroundColor: c + '30' }}
+                            >
+                              <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c }} />
+                              {getColorName(c)}
+                            </button>
                           ))}
                         </div>
                       </div>
